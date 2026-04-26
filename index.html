@@ -984,17 +984,29 @@
     });
 
     // Form submit
-    document.getElementById('leadForm').addEventListener('submit', (e) => {
+    document.getElementById('leadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const btn = e.target.querySelector('.btn-form');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
       const data = {
         nome: document.getElementById('nome').value,
         whatsapp: document.getElementById('whatsapp').value,
         email: document.getElementById('email').value,
-        timestamp: new Date().toISOString()
       };
-      console.log('[Terrazul MT] Lead capturado:', data);
-      document.getElementById('leadForm').style.display = 'none';
-      document.getElementById('formSuccess').classList.add('active');
+
+      try {
+        await fetch('https://script.google.com/macros/s/AKfycbzuZPJU5782PzxFQLeNfR_stKLMAeJJ3ulsYm1ynJvU_j_nfLSEOPznc8KzcymFukMH/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+      } finally {
+        document.getElementById('leadForm').style.display = 'none';
+        document.getElementById('formSuccess').classList.add('active');
+      }
     });
   </script>
 </body>
